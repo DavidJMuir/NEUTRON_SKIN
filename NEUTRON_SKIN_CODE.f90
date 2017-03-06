@@ -16,10 +16,19 @@ PROGRAM NEUTRON_SKIN
   REAL(KIND=dp), DIMENSION(:), ALLOCATABLE :: FUNCTIONAL_NEUTRON_SKIN_QUANTUM
   REAL(KIND=dp), DIMENSION(:), ALLOCATABLE :: FUNCTIONAL_NEUTRON_SKIN_HELM
 
+  REAL(KIND=dp), DIMENSION(:), ALLOCATABLE :: SKEWNESS_ARRAY_2pF
+  REAL(KIND=dp), DIMENSION(:), ALLOCATABLE :: SKEWNESS_ARRAY_QUANTUM
+  REAL(KIND=dp), DIMENSION(:), ALLOCATABLE :: SKEWNESS_ARRAY_HELM
+
+  
   INTEGER :: i
   ALLOCATE(FUNCTIONAL_NEUTRON_SKIN_2pF(NUMBER_OF_FUNCTIONALS))
   ALLOCATE(FUNCTIONAL_NEUTRON_SKIN_QUANTUM(NUMBER_OF_FUNCTIONALS))
   ALLOCATE(FUNCTIONAL_NEUTRON_SKIN_HELM(NUMBER_OF_FUNCTIONALS))
+
+  ALLOCATE(SKEWNESS_ARRAY_2pF(BOOTSTRAP_ITERATIONS))
+  ALLOCATE(SKEWNESS_ARRAY_QUANTUM(BOOTSTRAP_ITERATIONS))
+  ALLOCATE(SKEWNESS_ARRAY_HELM(BOOTSTRAP_ITERATIONS))
 
 !-------------------------------------------------------------------------------
   ! TESTS AND PSEUDOCODE FOR EMAINING WORK!
@@ -61,15 +70,40 @@ PROGRAM NEUTRON_SKIN
      PRINT*, "--------------------------------------------------------"
      PRINT*, "2pF ITERATION:", i
      PRINT*, "--------------------------------------------------------"
-     CALL BOOTSTRAP(FUNCTIONAL_NEUTRON_SKIN_2pF)
+     CALL BOOTSTRAP(FUNCTIONAL_NEUTRON_SKIN_2pF, SKEWNESS_ARRAY_2pF, i)
      PRINT*, "--------------------------------------------------------"
      PRINT*, "QUANTUM MECHANICAL DEFINITION ITERATION:", i
      PRINT*, "--------------------------------------------------------"
-     CALL BOOTSTRAP(FUNCTIONAL_NEUTRON_SKIN_QUANTUM)
+     CALL BOOTSTRAP(FUNCTIONAL_NEUTRON_SKIN_QUANTUM, SKEWNESS_ARRAY_QUANTUM, i)
      PRINT*, "--------------------------------------------------------"
      PRINT*, "HELM MODEL ITERATION:", i
      PRINT*, "--------------------------------------------------------"
-     CALL BOOTSTRAP(FUNCTIONAL_NEUTRON_SKIN_HELM)
+     CALL BOOTSTRAP(FUNCTIONAL_NEUTRON_SKIN_HELM, SKEWNESS_ARRAY_HELM, i)
+  END DO
+
+  
+  PRINT*, "--------------------------------------------------------"
+  PRINT*, "SKEWNESS ARRAY 2pF"
+  PRINT*, "--------------------------------------------------------"
+
+  DO i = 1, BOOTSTRAP_ITERATIONS
+     PRINT*, SKEWNESS_ARRAY_2pF(i)
+  END DO
+
+  PRINT*, "--------------------------------------------------------"
+  PRINT*, "SKEWNESS ARRAY QUANTUM"
+  PRINT*, "--------------------------------------------------------"
+
+  DO i = 1, BOOTSTRAP_ITERATIONS
+     PRINT*, SKEWNESS_ARRAY_QUANTUM(i)
+  END DO
+  
+  PRINT*, "--------------------------------------------------------"
+  PRINT*, "SKEWNESS ARRAY HELM"
+  PRINT*, "--------------------------------------------------------"
+
+  DO i = 1, BOOTSTRAP_ITERATIONS
+     PRINT*, SKEWNESS_ARRAY_HELM(i)
   END DO
 
 END PROGRAM NEUTRON_SKIN
